@@ -1,10 +1,10 @@
-pipeline {
+pipeline{
     agent any
-    tools {
+    tools{
         maven "MAVEN3"
         jdk "OracleJDK8"
     }
-    environment {
+    environment{
         SNAP_REPO = 'vprofile-snapshot'
         NEXUS_USER = 'admin'
         NEXUS_PASS = 'please'
@@ -15,29 +15,29 @@ pipeline {
         NEXUS_GRP_REPO = 'vpro-maven-group'
         NEXUS_LOGIN = 'nexuslogin'
     }
-    stages {
+    stages{
         stage ('Build'){
-            steps {
+            steps{
                 sh 'mvn -s settings.xml -DskipTests install'
             }
-            post {
-                success {
+            post{
+                success{
                     echo 'Now Archiving...'
                     archiveArtifacts artifacts: '**/target/*.war'
                 }
             }
-            stage('UNIT TEST'){
-                steps {
-                    sh 'mvn test'
-                }
+        stage('Unit Test'){
+            steps{
+                sh 'mvn test'
             }
-            stage ('CODE ANALYSIS WITH CHECKSTYLE'){
-                steps {
-                    sh 'mvn checkstyle:checkstyle'
-                }
-                post {
-                    success {
-                        echo 'Generated Analysis Result'
+        }
+        stage('Code Analysis with Checkstyle'){
+            steps{
+                sh 'mvn checkstyle:checkstyle'
+            }
+            post{
+                success {
+                    echo 'Generated Analysis Result'
                     }
                 }
             }
