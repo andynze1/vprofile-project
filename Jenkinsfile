@@ -1,10 +1,12 @@
-pipeline{
+pipeline {
     agent any
-    tools{
+    
+    tools {
         maven "MAVEN3"
         jdk "OracleJDK8"
     }
-    environment{
+    
+    environment {
         SNAP_REPO = 'vprofile-snapshot'
         NEXUS_USER = 'admin'
         NEXUS_PASS = 'please'
@@ -24,54 +26,66 @@ pipeline{
         NEXUS_CREDENTIAL_ID = 'nexuslogin'
         NEXUS_VERSION = 'nexus3'
     }
-    stages{
-        stage('Build'){
-            steps{
+    
+    stages {
+        stage('Build') {
+            steps {
                 sh 'mvn -s settings.xml -DskipTests clean install'
             }
-            post{
-                success{
+            post {
+                success {
                     echo 'Now Archiving...'
                     archiveArtifacts artifacts: '**/target/*.war'
                 }
             }
         }
-        stage('Unit Test'){
-            steps{
+        
+        stage('Unit Test') {
+            steps {
                 sh 'mvn -s settings.xml test'
             }
         }
-        stage('Code Analysis with Checkstyle'){
-            steps{
+        
+        stage('Code Analysis with Checkstyle') {
+            steps {
                 sh 'mvn checkstyle:checkstyle'
             }
-            post{
-                success{
+            post {
+                success {
                     echo 'Generated Analysis Result'
                 }
             }
         }
+        
         stage('Code Analysis with SonarQube') {
-          
-		  environment {
-             scannerHome = tool "${SONARSCANNER}"
-          }
+            environment {
+                scannerHome = tool "${SONARSCANNER}"
+            }
             steps {
-                withSonarQubeEnv("${SONARSERVER}") {
-                    sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
-                        -Dsonar.projectName=vprofile-repo \
-                        -Dsonar.projectVersion=1.0 \
-                        -Dsonar.sources=src/ \
-                        -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
-                        -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                        -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                        -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+                script {
+                    withSonarQubeEnv("${SONARSERVER}") {
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
+                            -Dsonar.projectName=vprofile-repo \
+                            -Dsonar.projectVersion=1.0 \
+                            -Dsonar.sources=src/ \
+                            -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
+                            -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                            -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                            -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml"
                     }
-                    timeout(time: 10, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
-
-        stage("Publish to Nexus Repository Manager"){
-            steps{
+                }
+                post {
+                    always {
+                        timeout(time: 10, unit: 'MINUTES') {
+                            waitForQualityGate abortPipeline: true
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage("Publish to Nexus Repository Manager") {
+            steps {
                 script {
                     pom = readMavenPom file: "pom.xml";
                     filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
@@ -99,9 +113,8 @@ pipeline{
                                 type: "pom"]
                             ]
                         );
-                    }
-                }
-            }
+                    } else {
+                        error "*** File: ${artifactPath}, could not be found";
                     }
                 }
             }
