@@ -36,7 +36,6 @@ pipeline {
                 }
             }
         }
-        
         stage('Unit Test') {
             steps {
                 sh 'mvn -s settings.xml test'
@@ -57,6 +56,7 @@ pipeline {
         stage('Code Analysis with SonarQube') {
             environment {
                 scannerHome = tool "${SONARSCANNER}"
+                }
             }
             steps {
                 script {
@@ -71,12 +71,12 @@ pipeline {
                             -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml"
                     }
                 }
+            }
+        
         stage ("Quality Gate") {
             steps{
                 timeout(time: 10, unit: 'MINUTES') {
                 waitForQualityGate abortPipeline: true
-                        }
-                    }
                 }
             }
         }
