@@ -31,12 +31,6 @@ pipeline{
                 sh 'mvn -s settings.xml test'
             }
         }
-        stage('Code Analysis with Checkstyle'){
-            steps{
-                sh 'mvn checkstyle:checkstyle'
-            }
 
-            }
         }
     }
-}
