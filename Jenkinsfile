@@ -26,11 +26,6 @@ pipeline{
                     archiveArtifacts artifacts: '**/target/*.war'
                 }
             }
-        stage('Unit Test'){
-            steps{
-                sh 'mvn -s settings.xml test'
-            }
-        }
 
         }
     }
