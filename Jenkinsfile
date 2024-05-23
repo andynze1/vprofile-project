@@ -41,7 +41,6 @@ pipeline {
                 sh 'mvn -s settings.xml test'
             }
         }
-        
         stage('Code Analysis with Checkstyle') {
             steps {
                 sh 'mvn checkstyle:checkstyle'
@@ -49,10 +48,9 @@ pipeline {
             post {
                 success {
                     echo 'Generated Analysis Result'
+                    }
                 }
-            }
         }
-        
         stage('Code Analysis with SonarQube') {
             environment {
                 scannerHome = tool "${SONARSCANNER}"
@@ -72,16 +70,14 @@ pipeline {
                     }
                 }
             }
-        
-        stage ("Quality Gate") {
-            steps{
+        stage("Quality Gate"){
+            steps {
                 timeout(time: 10, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: true
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
-        
-        stage("Publish to Nexus Repository Manager") {
+        stage("Publish to Nexus Repository Manager"){
             steps {
                 nexusArtifactUploader(
                 nexusVersion: "${NEXUS_VERSION}",
@@ -96,9 +92,8 @@ pipeline {
                     classifier: '',
                     file: "target/vprofile-v2.war",
                     type: "war"]
-                    ]
-                )
-            } 
+                ]
+            )
         }
     }
 }
