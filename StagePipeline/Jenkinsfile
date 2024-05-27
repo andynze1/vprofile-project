@@ -103,20 +103,6 @@ pipeline {
                 )
             }
         }
-    }
-    post {
-        always {
-            script {
-                def color = COLOR_MAP.get(currentBuild.currentResult, '#808080') // Default to gray if result not in map
-                echo 'Slack Notification.'
-                slackSend (
-                    channel: '#jenkinscicd',
-                    color: color,
-                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \nMore info at: ${env.BUILD_URL}"
-                )
-            }
-        }
-
         stage("Build app Docker Image"){
             steps {
                 script {
@@ -132,6 +118,19 @@ pipeline {
                         dockerImage.push('latest')
                     }
                 }
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                def color = COLOR_MAP.get(currentBuild.currentResult, '#808080') // Default to gray if result not in map
+                echo 'Slack Notification.'
+                slackSend (
+                    channel: '#jenkinscicd',
+                    color: color,
+                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \nMore info at: ${env.BUILD_URL}"
+                )
             }
         }
     }
