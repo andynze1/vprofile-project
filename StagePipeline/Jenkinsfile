@@ -90,7 +90,7 @@ pipeline {
                 nexusArtifactUploader(
                     nexusVersion: "${NEXUS_VERSION}",
                     protocol: "${NEXUS_PROTOCOL}",
-                    nexusUrl: "${NEXUS_URL}",
+                    nexusUrl: "${NEXUSIP}:${NEXUSPORT}",
                     groupId: "${NEXUS_REPOGRP_ID}",
                     version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
                     repository: "${RELEASE_REPO}",
@@ -107,7 +107,7 @@ pipeline {
         stage('Download Artifact from Nexus') {
             steps {
                 script {
-                    sh 'curl -u ${NEXUS_USER}:${NEXUS_PASS} -o vprofile-v2.war ${NEXUS_URL}/repository/${RELEASE_REPO}/${NEXUS_REPOGRP_ID}/vproapp/${env.BUILD_ID}-${env.BUILD_TIMESTAMP}/vproapp-${env.BUILD_ID}-${env.BUILD_TIMESTAMP}.war'
+                    sh 'curl -u ${NEXUS_USER}:${NEXUS_PASS} -o vprofile-v2.war ${NEXUSIP}:${NEXUSPORT}/repository/${RELEASE_REPO}/${NEXUS_REPOGRP_ID}/vproapp/${env.BUILD_ID}-${env.BUILD_TIMESTAMP}/vproapp-${env.BUILD_ID}-${env.BUILD_TIMESTAMP}.war'
                 }
             }
         }
