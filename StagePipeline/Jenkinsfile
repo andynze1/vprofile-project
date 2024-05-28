@@ -30,8 +30,11 @@ pipeline {
         NEXUS_REPOGRP_ID = 'QA'
         NEXUS_VERSION = 'nexus3'
         registryCredential = 'ecr:us-east-1:awscreds'
+        
         appRegistry = '461086874723.dkr.ecr.us-east-1.amazonaws.com/vprofileappimg'
         vprofileRegistry = 'https://461086874723.dkr.ecr.us-east-1.amazonaws.com'
+        cluster = 'vprostaging'
+        service 'vproappstagesvc'
     }
     
     stages {
@@ -118,6 +121,14 @@ pipeline {
                         dockerImage.push("${env.BUILD_NUMBER}")
                         dockerImage.push('latest')
                     }
+                }
+            }
+        }
+
+        stage('Deploy to ECS Staging'){
+            steps{
+                withAWS(credentials: 'awscred', region: 'us-east-1') {
+                    sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
                 }
             }
         }
