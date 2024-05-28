@@ -107,7 +107,7 @@ pipeline {
         stage('Build app Docker Image from target Artifacts') {
             steps {
                 script {
-                    dockerImage = docker.build(appRegistry + ":${env.BUILD_NUMBER}", "./Docker-files/app/multistage")
+                    dockerImage = docker.build(appRegistry + ":${env.BUILD_NUMBER}", "./Docker-files/app/multistage/Dockerfile")
                 }
             }
         }
