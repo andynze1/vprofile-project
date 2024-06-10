@@ -135,6 +135,16 @@ pipeline {
     post {
         always {
             script {
+               // Debug statements
+               echo "NEXUS_USER: ${NEXUS_USER}"
+               echo "NEXUS_PASS: ${NEXUS_PASS}"
+               echo "NEXUSIP: ${NEXUSIP}"
+               echo "NEXUSPORT: ${NEXUSPORT}"
+               echo "RELEASE_REPO: ${RELEASE_REPO}"
+               echo "BUILD_ID: ${env.BUILD_ID}"
+               echo "BUILD_TIMESTAMP: ${env.BUILD_TIMESTAMP}"
+
+                               // Slack notification
                 def color = COLOR_MAP.get(currentBuild.currentResult, '#808080') // Default to gray if result not in map
                 echo 'Slack Notification.'
                 slackSend (
