@@ -24,10 +24,11 @@ pipeline {
         NEXUS_LOGIN = 'nexuslogin'
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
-    //    NEXUS_PROTOCOL = 'http'
         NEXUSPASS = credentials('nexuspass')
+    //    NEXUS_PROTOCOL = 'http'
+
 //        NEXUS_REPOGRP_ID = 'QA'
-        NEXUS_VERSION = 'nexus3'
+//        NEXUS_VERSION = 'nexus3'
     }
     stages {
         stage('Build Artifact') {
@@ -83,7 +84,7 @@ pipeline {
         stage('Upload Artifacts to Nexus Repository Manager') {
             steps {
                 nexusArtifactUploader(
-                nexusVersion: "${NEXUS_VERSION}",
+                nexusVersion: 'nexus3',
                 protocol: 'http',
                 nexusUrl: "${NEXUSIP}:${NEXUSPORT}",
                 groupId: 'QA',
