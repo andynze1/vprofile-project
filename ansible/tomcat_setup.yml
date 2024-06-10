@@ -11,12 +11,12 @@
         state: present
       when: ansible_distribution == 'CentOS'
 
-    - name: Install JDK on Ubuntu 14/15/16/18
+    - name: Install JDK on Ubuntu
       apt:
         name: openjdk-8-jdk
         state: present
         update_cache: yes
-      when: ansible_distribution == 'Ubuntu' 
+      when: ansible_distribution == 'Ubuntu'
 
     - name: Download Tomcat Tar Ball/Binaries
       get_url:
@@ -65,33 +65,33 @@
 
     - name: Setup tomcat SVC file on Centos 7
       template:
-         src: templates/epel7-svcfile.j2
-         dest: /etc/systemd/system/tomcat.service
-         mode: "a+x"
-      when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'      
+        src: templates/epel7-svcfile.j2
+        dest: /etc/systemd/system/tomcat.service
+        mode: "a+x"
+      when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
 
     - name: Setup tomcat SVC file on Centos 6
       template:
-         src: templates/epel6-svcfile.j2
-         dest: /etc/init.d/tomcat
-         mode: "a+x"
+        src: templates/epel6-svcfile.j2
+        dest: /etc/init.d/tomcat
+        mode: "a+x"
       when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '6'
 
-    - name: Setup tomcat SVC file on ubuntu 14/15
+    - name: Setup tomcat SVC file on Ubuntu 14/15
       template:
-         src: templates/ubuntu14_15-svcfile.j2
-         dest: /etc/init.d/tomcat
-         mode: "a+x"
+        src: templates/ubuntu14_15-svcfile.j2
+        dest: /etc/init.d/tomcat
+        mode: "a+x"
       when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version < '16'
 
-    - name: Setup tomcat SVC file on ubuntu 16 and 18
+    - name: Setup tomcat SVC file on Ubuntu 16 and above
       template:
-         src: templates/ubuntu16-svcfile.j2
-         dest: /etc/systemd/system/tomcat.service
-         mode: "a+x"
+        src: templates/ubuntu16-svcfile.j2
+        dest: /etc/systemd/system/tomcat.service
+        mode: "a+x"
       when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version >= '16'
 
-    - name: Reload tomcat svc config in ubuntu 14/15
+    - name: Reload tomcat svc config in Ubuntu 14/15
       command: update-rc.d tomcat defaults
       when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version < '16'
 
@@ -99,15 +99,13 @@
       command: chkconfig --add tomcat
       when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '6'
 
-    - name: just force systemd to reread configs (2.4 and above)
+    - name: Force systemd to reread configs (2.4 and above)
       systemd:
-        daemon_reload: yes 
+        daemon_reload: yes
       when: ansible_distribution_major_version > '6' or ansible_distribution_major_version > '15'
 
-    - name: Start & Enable TOmcat 8
+    - name: Start & Enable Tomcat 8
       service:
         name: tomcat
         state: started
         enabled: yes
-
-   
