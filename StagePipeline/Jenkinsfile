@@ -28,7 +28,7 @@ pipeline {
         NEXUSPASS = credentials('nexuspass')
 //        NEXUS_REPOGRP_ID = 'QA'
         NEXUS_VERSION = 'nexus3'
-
+    }
     stages {
         stage('Build Artifact') {
             steps {
@@ -129,31 +129,6 @@ pipeline {
                 echo "Build ID: ${env.BUILD_ID}"
             }
         }
-//         stage('Build app Docker Image cloning repo') {
-//             steps {
-//                 script {
-//                     dockerImage = docker.build(appRegistry + ":${env.BUILD_NUMBER}", "./Docker-files/app/multistage/")
-//                 }
-//             }
-//         }
-//         stage('Upload app Docker Image') {
-//             steps {
-//                 script {
-//                     docker.withRegistry(vprofileRegistry, registryCredential) {
-//                         dockerImage.push("${env.BUILD_NUMBER}")
-//                         dockerImage.push('latest')
-//                     }
-//                 }
-//             }
-//         }
-//
-//         stage('Deploy to ECS Staging') {
-//             steps {
-//                 withAWS(credentials: 'awscreds', region: 'us-east-1') {
-//                     sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
-//                 }
-//             }
-//         }
    }
 
     post {
@@ -168,6 +143,5 @@ pipeline {
                 )
             }
         }
-    }
     }
 }
