@@ -6,12 +6,10 @@ def COLOR_MAP = [
 ]
 
 pipeline {
+    agent any
+    
     environment {
         NEXUSPASS = credentials('nexuspass')
-    //    NEXUS_PROTOCOL = 'http'
-
-//        NEXUS_REPOGRP_ID = 'QA'
-//        NEXUS_VERSION = 'nexus3'
     }
     stages {
         stage('Setup Parameters'){
