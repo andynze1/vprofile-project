@@ -108,20 +108,20 @@ pipeline {
                 playbook    :   'ansible/site.yml',
                 installation:   'ansible',
                 colorized   :   true,
-                        credentialsId: 'applogin',
-                        disableHostKeyChecking: true,
+                credentialsId: 'applogin',
+                disableHostKeyChecking: true,
                 extraVars   : [
                     USER: "admin",
                     PASS: "${NEXUSPASS}",
-                        nexusip: "10.1.1.101",
-                        reponame: "vprofile-release",
-                        groupid: "QA",
-                        time: "${env.BUILD_TIMESTAMP}",
-                        build: "${env.BUILD_ID}",
+                    nexusip: "10.1.1.101",
+                    reponame: "vprofile-release",
+                    groupid: "QA",
+                    time: "${env.BUILD_TIMESTAMP}",
+                    build: "${env.BUILD_ID}",
                     artifactid: "vproapp",
-                    vprofile_version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}.war"
+                    vprofile_version: "vproapp-${env.BUILD_ID}-${env.BUILD_TIMESTAMP}.war"
                 ]
-                ])
+              ])
             }
         }
 
