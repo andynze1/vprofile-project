@@ -126,12 +126,17 @@ pipeline {
                     time: "${env.BUILD_TIMESTAMP}",
                     build: "${env.BUILD_ID}",
                     artifactid: "vproapp",
-                    vprofile_version: "vproapp-${env.BUILD_ID}-${env.BUILD_TIMESTAMP}.war"
+                    vprofile_version: QA/vproapp-${env.BUILD_ID}-${env.BUILD_TIMESTAMP}.war"
                 ]
                 ])
             }
         }
 
+        stage("Debug") {
+            steps {
+                echo "Build ID: ${env.BUILD_ID}"
+            }
+        }
 //         stage('Build app Docker Image cloning repo') {
 //             steps {
 //                 script {
