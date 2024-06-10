@@ -103,7 +103,7 @@ pipeline {
                     classifier: '',
                     file: 'target/vprofile-v2.war',
                     type: 'war']
-                    ]
+                ]
                 )
             }
         }
@@ -115,7 +115,7 @@ pipeline {
                 playbook    :   'ansible/site.yml',
                 installation:   'ansible',
                 colorized   :   true,
-                credentialsId: 'applogin'
+                credentialsId: 'applogin',
                 disableHostKeyChecking: true,
                 extraVars   :  [
                     USER: "admin",
@@ -131,7 +131,6 @@ pipeline {
                 ])
             }
         }
-
 
         stage('Build app Docker Image cloning repo') {
             steps {
@@ -151,8 +150,8 @@ pipeline {
             }
         }
 
-        stage('Deploy to ECS Staging'){
-            steps{
+        stage('Deploy to ECS Staging') {
+            steps {
                 withAWS(credentials: 'awscreds', region: 'us-east-1') {
                     sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
                 }
