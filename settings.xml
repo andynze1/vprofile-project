@@ -27,14 +27,12 @@
   </servers>
 
   <mirrors>
-    <!-- Remove the problematic mirror configuration -->
-    <!--
     <mirror>
       <id>${CENTRAL-REPO}</id>
       <name>${CENTRAL-REPO}</name>
       <url>http://${NEXUSIP}:${NEXUSPORT}/repository/${NEXUS_GRP_REPO}/</url>
       <mirrorOf>*</mirrorOf>
-    </mirror>  -->
+    </mirror>
   </mirrors>
 
 </settings>
